@@ -12,7 +12,7 @@ const mergeFoundIn = (objValue = [], srcValue, key) => {
 };
 
 function normalizeRecord(record, parent) {
-  let data = record;
+  let data = { ...record };
 
   const { value: PK } = createPK(record, this.Model.PK);
 

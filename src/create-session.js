@@ -7,6 +7,7 @@ const createSession = config => {
 
   session.getState = () => session.state;
   session.setState = callback => (session.state = callback(session.state));
+  session.resetToInitialState = () => (session.state = initialState);
 
   Object.entries(models).forEach(([name, options]) => {
     Models[name] = createModel({ name, ...options }, session);
