@@ -1,4 +1,4 @@
-const { createPK } = require("../../utils/create-model");
+const { createPK } = require("../utils/createModel");
 
 function createParent({ ref, data }) {
   return {

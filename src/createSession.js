@@ -1,4 +1,4 @@
-const createModel = require("./create-model");
+const createModel = require("./createModel");
 
 const createSession = config => {
   const { models, initialState } = config;
@@ -6,6 +6,7 @@ const createSession = config => {
   const session = {};
 
   session.getState = () => session.state;
+  session.commit = () => session.state;
   session.setState = callback => (session.state = callback(session.state));
   session.resetToInitialState = () => (session.state = initialState);
 

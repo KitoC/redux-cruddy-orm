@@ -1,5 +1,4 @@
-const attrTypes = require("./attribute-types");
-const createModel = require("./create-model");
-const createDB = require("./create-db");
+const attrTypes = require("./attributeTypes");
+const createORM = require("./createOrm");
 
-module.exports = { ...attrTypes, createModel, createDB };
+module.exports = { ...attrTypes, createORM };

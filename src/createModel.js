@@ -1,8 +1,8 @@
-const { getReferences, getPrimaryKey } = require("../utils/create-model");
+const { getReferences, getPrimaryKey } = require("./utils/createModel");
 
-const { PK } = require("../attribute-types");
-const actions = require("./model-actions");
-const privateMethods = require("./private-methods");
+const { PK } = require("./attributeTypes");
+const actions = require("./modelActions");
+const privateMethods = require("./privateActions");
 
 const defaults = { attributes: { id: PK() } };
 

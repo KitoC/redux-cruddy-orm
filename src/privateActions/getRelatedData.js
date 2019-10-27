@@ -1,8 +1,8 @@
 const isArray = require("lodash/isArray");
 const isPlainObject = require("lodash/isPlainObject");
 const get = require("lodash/get");
-const { relationTypes } = require("../../constants");
-const { createPK, createFK } = require("../../utils/create-model");
+const { relationTypes } = require("../constants");
+const { createPK, createFK } = require("../utils/createModel");
 
 function getRelatedData(record, options = {}) {
   const { withRelated } = options;

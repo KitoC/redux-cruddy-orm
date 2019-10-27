@@ -1,5 +1,5 @@
-const { createPK } = require("../../utils/create-model");
-const { relationTypes } = require("../../constants");
+const { createPK } = require("../utils/createModel");
+const { relationTypes } = require("../constants");
 const isArray = require("lodash/isArray");
 const mergeWith = require("lodash/mergeWith");
 const isPlainObject = require("lodash/isPlainObject");
