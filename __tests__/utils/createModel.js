@@ -3,9 +3,9 @@ const {
   getReferences,
   createFK,
   getPrimaryKey
-} = require("../../src/utils/create-model");
+} = require("../../src/utils/createModel");
 const { relationTypes, attributeTypes } = require("../../src/constants");
-const { hasOne, hasMany, PK } = require("../../src/attribute-types");
+const { hasOne, hasMany, PK } = require("../../src/attributeTypes");
 
 describe("createPK", () => {
   const record = { id: 1 };

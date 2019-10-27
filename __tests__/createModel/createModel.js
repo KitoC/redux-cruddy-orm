@@ -1,5 +1,5 @@
-const { hasOne, hasMany, PK } = require("../../src/attribute-types");
-const createDb = require("../../src/create-db");
+const { hasOne, hasMany, PK } = require("../../src/attributeTypes");
+const createDb = require("../../src/createOrm");
 
 describe("model created from createSession", () => {
   const db = createDb({

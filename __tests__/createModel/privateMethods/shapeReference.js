@@ -1,5 +1,5 @@
-const createDb = require("../../../src/create-db");
-const { hasOne } = require("../../../src/attribute-types");
+const createDb = require("../../../src/createOrm");
+const { hasOne } = require("../../../src/attributeTypes");
 
 describe("shapeReference", () => {
   const db = createDb({

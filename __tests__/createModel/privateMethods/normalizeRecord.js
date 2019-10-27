@@ -1,5 +1,5 @@
-const createDb = require("../../../src/create-db");
-const { hasOne, hasMany } = require("../../../src/attribute-types");
+const createDb = require("../../../src/createOrm");
+const { hasOne, hasMany } = require("../../../src/attributeTypes");
 
 describe("normalizeRecord", () => {
   const db = createDb({
@@ -33,8 +33,7 @@ describe("normalizeRecord", () => {
   const createNormalizedChildB = id => ({
     id,
     extra: "field",
-    isChild: true,
-    _foundIn: ["parentModel.children.id.1"]
+    isChild: true
   });
 
   const createNormalizedChildBReference = id => ({ id, __typename: "childB" });
@@ -63,8 +62,7 @@ describe("normalizeRecord", () => {
         "223": {
           id: 223,
           another: "field",
-          isChild: true,
-          _foundIn: ["parentModel.child.id.1"]
+          isChild: true
         }
       },
       ids: [223],

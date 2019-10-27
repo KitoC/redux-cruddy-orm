@@ -7,8 +7,6 @@ const byId = Model => (id, options = {}) => {
 
   if (withRelated) record = Model.__private__.getRelatedData(record, options);
 
-  delete record._foundIn;
-
   return record;
 };
 

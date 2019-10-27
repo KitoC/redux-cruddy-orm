@@ -20,22 +20,17 @@ function getRelatedData(record, options = {}) {
   references.forEach(ref => {
     if (keys.includes(ref.as) && relationTypes[ref.relationType]) {
       const RelatedModel = this.Model.__private__.session.Models[ref.model];
-      const PK = createPK(data, this.Model.PK).value;
-      const parent = this.Model.__private__.createParent({
-        ref,
-        data
-      });
-      const FK = createFK({ parent, PK });
 
-      const relatedRecords = RelatedModel.all({
-        ...options,
-        where: { _foundIn: FK }
-      });
+      const getRelatedPK = ({ [RelatedModel.PK[0]]: pk }) => pk;
 
-      if (isArray(data[ref.as])) data[ref.as] = relatedRecords;
+      if (isArray(data[ref.as])) {
+        data[ref.as] = record[ref.as].map(entity =>
+          RelatedModel.byId(getRelatedPK(entity), options)
+        );
+      }
 
       if (isPlainObject(data[ref.as])) {
-        data[ref.as] = get(relatedRecords, "[0]", null);
+        data[ref.as] = RelatedModel.byId(getRelatedPK(data[ref.as]), options);
       }
     }
   });

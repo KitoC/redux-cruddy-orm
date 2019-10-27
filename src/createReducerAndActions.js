@@ -1,32 +1,77 @@
-function createReducerAndActions(MODEL) {
-  // const MODEL = Model.name;
-  console.log(MODEL);
+const createAction = require("./createAction");
+const get = require("lodash/get");
 
-  const types = {
-    FETCH_DONE: `CRUDDY_ORM_FETCH_DONE_${MODEL}`,
-    UPDATE: `CRUDDY_ORM_UPDATE_${MODEL}`,
-    INSERT: `CRUDDY_ORM_INSERT_${MODEL}`,
-    CREATE: `CRUDDY_ORM_CREATE_${MODEL}`,
-    DELETE: `CRUDDY_ORM_DELETE_${MODEL}`
+function createReducerAndActions(MODEL, model = {}, __test__ = {}) {
+  const { overrides = {} } = model;
+  const type = t => `orm/default/${MODEL}/${t}`;
+
+  const setLoading = createAction(
+    type("setLoading"),
+    get(overrides, "setLoading.actionPrepare")
+  );
+  const setErrors = createAction(
+    type("setErrors"),
+    get(overrides, "setErrors.actionPrepare")
+  );
+  const update = createAction(
+    type("update"),
+    get(overrides, "update.actionPrepare")
+  );
+  const insert = createAction(
+    type("insert"),
+    get(overrides, "insert.actionPrepare")
+  );
+  const create = createAction(
+    type("create"),
+    get(overrides, "create.actionPrepare")
+  );
+  const destroy = createAction(
+    type("destroy"),
+    get(overrides, "destroy.actionPrepare")
+  );
+
+  const actions = {
+    setLoading,
+    setErrors,
+    update,
+    insert,
+    create,
+    delete: destroy
   };
 
-  const reducer = (session, action) => {
-    switch (action.type) {
-      case types.FETCH_DONE:
-      case types.UPDATE:
-      case types.INSERT:
-      case types.CREATE:
-        session.Models[MODEL].upsert(action.payload);
-        break;
-      case types.DELETE:
-        session.Models[MODEL].delete(action.payloadp[Model.PK[0]]);
-        break;
-      default:
-        break;
-    }
+  const reducer = {};
+
+  reducer[setLoading] = (session, { payload }) => {
+    if (__test__.reducer) __test__.reducer();
+
+    session.setState(draftState => {
+      draftState[MODEL].loading = payload;
+    });
   };
 
-  return { reducer, types };
+  reducer[setErrors] = (session, { payload }) => {
+    if (__test__.reducer) __test__.reducer();
+
+    session.setState(draftState => {
+      draftState[MODEL].errors = payload;
+    });
+  };
+
+  const upsert = (session, { payload }) => {
+    if (__test__.reducer) __test__.reducer();
+
+    session.Models[MODEL].upsert(payload);
+  };
+
+  reducer[create] = upsert;
+  reducer[insert] = upsert;
+  reducer[update] = upsert;
+
+  reducer[destroy] = (session, { payload }) => {
+    session.Models[MODEL].delete(payload);
+  };
+
+  return { reducer, actions };
 }
 
 module.exports = createReducerAndActions;

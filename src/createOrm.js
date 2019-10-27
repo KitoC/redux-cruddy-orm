@@ -1,43 +1,51 @@
 const createSession = require("./createSession");
 const createReducerAndActions = require("./createReducerAndActions");
-
-const createEmptyState = ({ name }) => ({
-  byId: {},
-  ids: [],
-  errors: [],
-  loading: false,
-  name
-});
+const isFunction = require("lodash/isFunction");
+const isPlainObject = require("lodash/isPlainObject");
+const flatten = require("lodash/flatten");
+const createEmptyState = require("./utils/createEmptyState");
 
 const createDB = (config = {}) => {
-  const { models } = config;
-  const db = {};
+  const { models, __test__ } = config;
+  const orm = {};
   let initialState = {};
 
-  db.models = models;
-  db.createSession = createSession({ models, initialState });
-  db.reducers = [];
-  db.types = {};
+  orm.initialState = initialState;
+  orm.models = models;
+  orm.createSession = createSession({ models, initialState });
+  orm.reducers = [];
+  orm.types = {};
+  orm.actions = {};
 
-  Object.keys(models).forEach(key => {
-    const { reducer, types } = createReducerAndActions(key);
+  Object.entries(models).forEach(([key, model]) => {
+    const { reducer, types, actions } = createReducerAndActions(
+      key,
+      model,
+      __test__
+    );
 
     initialState[key] = createEmptyState({ name: key });
-    db.reducers.push(reducer);
-    db.types[key] = types;
+    orm.reducers.push(reducer);
+    orm.types[key] = types;
+    orm.actions[key] = actions;
   });
 
-  db.reducer = (STATE = initialState, action) => {
-    const session = db.createSession(STATE);
+  orm.addReducer = reducer => orm.reducers.push(reducer);
 
-    db.reducers.forEach(reducer => {
-      reducer(session, action);
+  orm.reducer = (STATE = initialState, action) => {
+    const session = orm.createSession(STATE);
+
+    flatten(orm.reducers).forEach(reducer => {
+      if (isFunction(reducer)) reducer(session, action);
+      if (isPlainObject(reducer) && isFunction(reducer[action.type])) {
+        reducer[action.type](session, action);
+      }
     });
 
     return session.commit();
   };
 
-  return db;
+  return orm;
 };
 
 module.exports = createDB;

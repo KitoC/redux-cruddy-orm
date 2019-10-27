@@ -1,4 +1,4 @@
-const createDb = require("../../../src/create-db");
+const createDb = require("../../../src/createOrm");
 
 describe("handleWhere", () => {
   const db = createDb({ models: { testModel: {} } });

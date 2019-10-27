@@ -1,5 +1,5 @@
-const createDb = require("../../../src/create-db");
-const { hasOne, hasMany } = require("../../../src/attribute-types");
+const createDb = require("../../../src/createOrm");
+const { hasOne, hasMany } = require("../../../src/attributeTypes");
 
 describe("getRelatedData", () => {
   const db = createDb({

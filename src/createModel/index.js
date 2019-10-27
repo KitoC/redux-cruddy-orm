@@ -3,6 +3,7 @@ const { getReferences, getPrimaryKey } = require("../utils/createModel");
 const { PK } = require("../attributeTypes");
 const actions = require("./modelActions");
 const privateMethods = require("./privateMethods");
+const createReducerAndActions = require("../createReducerAndActions");
 
 const defaults = { attributes: { id: PK() } };
 
