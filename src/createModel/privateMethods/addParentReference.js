@@ -1,4 +1,4 @@
-const { createFK } = require("../utils/createModel");
+const { createFK } = require("../../utils/createModel");
 const merge = require("lodash/merge");
 
 function addParentReference(record, parent) {

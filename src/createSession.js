@@ -1,4 +1,4 @@
-const createModel = require("./createModel");
+const createModel = require("./createModel/index");
 
 const createSession = config => {
   const { models, initialState } = config;
