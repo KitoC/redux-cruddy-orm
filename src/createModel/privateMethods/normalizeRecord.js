@@ -10,51 +10,61 @@ const mergeFoundIn = (objValue = [], srcValue) => {
   }
 };
 
-function normalizeRecord(record, parent) {
-  let data = { ...record };
+const normalizeRecord = (Model, Models) => record => {
+  try {
+    let data = { ...record };
 
-  const { value: PK } = createPK(record, this.Model.PK);
+    const { value: PK } = createPK(record, Model.PK);
 
-  const keys = Object.keys(data);
+    const keys = Object.keys(data);
 
-  this.Model.references.forEach(ref => {
-    if (keys.includes(ref.as) && relationTypes[ref.relationType]) {
-      const relatedData = data[ref.as];
-      const RelatedModel = this.Model.__private__.session.Models[ref.model];
+    Model.references.forEach(ref => {
+      if (keys.includes(ref.as) && relationTypes[ref.relationType]) {
+        const relatedData = data[ref.as];
+        const RelatedModel = Models[ref.model];
 
-      RelatedModel.upsert(
-        relatedData,
-        this.Model.__private__.createParent({ ref, data })
+        if (!RelatedModel) {
+          throw new Error(
+            `You are attempting to use a related model that thas not been defined yet - check "${ref.model}" on "${Model.name}"`
+          );
+        }
+
+        RelatedModel.upsert(
+          relatedData,
+          Model.__private__.createParent({ ref, data })
+        );
+
+        if (isArray(data[ref.as])) {
+          data[ref.as] = data[ref.as].map(relatedRecord =>
+            Model.__private__.shapeReference(relatedRecord, RelatedModel)
+          );
+        }
+
+        if (isPlainObject(data[ref.as])) {
+          data[ref.as] = Model.__private__.shapeReference(
+            data[ref.as],
+            RelatedModel
+          );
+        }
+      }
+    });
+
+    Model.__private__.session.setState(draftState => {
+      if (!draftState[Model.name].ids.includes(PK)) {
+        draftState[Model.name].ids.push(PK);
+      }
+
+      const existingData = draftState[Model.name].byId[PK] || {};
+
+      draftState[Model.name].byId[PK] = mergeWith(
+        existingData,
+        data,
+        mergeFoundIn
       );
-
-      if (isArray(data[ref.as])) {
-        data[ref.as] = data[ref.as].map(relatedRecord =>
-          this.Model.__private__.shapeReference(relatedRecord, RelatedModel)
-        );
-      }
-
-      if (isPlainObject(data[ref.as])) {
-        data[ref.as] = this.Model.__private__.shapeReference(
-          data[ref.as],
-          RelatedModel
-        );
-      }
-    }
-  });
-
-  this.Model.__private__.session.setState(draftState => {
-    if (!draftState[this.Model.name].ids.includes(PK)) {
-      draftState[this.Model.name].ids.push(PK);
-    }
-
-    const existingData = draftState[this.Model.name].byId[PK] || {};
-
-    draftState[this.Model.name].byId[PK] = mergeWith(
-      existingData,
-      data,
-      mergeFoundIn
-    );
-  });
-}
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 module.exports = normalizeRecord;

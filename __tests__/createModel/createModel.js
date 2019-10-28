@@ -31,6 +31,7 @@ describe("model created from createSession", () => {
     delete: parentModel.delete,
     upsert: parentModel.upsert,
     models: parentModel.models,
+    createRequestThunks: parentModel.createRequestThunks,
     attributes: { id: PK() }
   };
   const attr = { foo: "bar", bar: "foo" };

@@ -1,7 +1,7 @@
 const get = require("lodash/get");
 const isArray = require("lodash/isArray");
 
-function handleWhere(record, where) {
+const handleWhere = Model => (record, where) => {
   let passes = true;
 
   if (where._foundIn) {
@@ -16,6 +16,6 @@ function handleWhere(record, where) {
   });
 
   return passes;
-}
+};
 
 module.exports = handleWhere;

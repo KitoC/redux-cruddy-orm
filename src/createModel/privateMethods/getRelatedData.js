@@ -4,12 +4,12 @@ const get = require("lodash/get");
 const { relationTypes } = require("../../constants");
 const { createPK, createFK } = require("../../utils/createModel");
 
-function getRelatedData(record, options = {}) {
+const getRelatedData = (Model, Models) => (record, options = {}) => {
   const { withRelated } = options;
   const keys = Object.keys(record);
 
   const data = { ...record };
-  let references = this.Model.references;
+  let references = Model.references;
 
   if (isArray(withRelated)) {
     references = references.filter(({ as, model }) => {
@@ -19,7 +19,7 @@ function getRelatedData(record, options = {}) {
 
   references.forEach(ref => {
     if (keys.includes(ref.as) && relationTypes[ref.relationType]) {
-      const RelatedModel = this.Model.__private__.session.Models[ref.model];
+      const RelatedModel = Models[ref.model];
 
       const getRelatedPK = ({ [RelatedModel.PK[0]]: pk }) => pk;
 
@@ -36,6 +36,6 @@ function getRelatedData(record, options = {}) {
   });
 
   return data;
-}
+};
 
 module.exports = getRelatedData;

@@ -1,10 +1,10 @@
-const isNumber = require("lodash/isNumber");
+const isPlainObject = require("lodash/isPlainObject");
 const isArray = require("lodash/isArray");
 
 const Delete = Model => (payload, options = {}) => {
   const idsOrRecords = isArray(payload) ? payload : [payload];
   const ids = idsOrRecords.map(idOrRecord =>
-    isNumber(idOrRecord) ? idOrRecord : idOrRecord[Model.PK[0]]
+    isPlainObject(idOrRecord) ? idOrRecord[Model.PK[0]] : idOrRecord
   );
 
   Model.__private__.session.setState(draftState => {

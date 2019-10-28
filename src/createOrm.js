@@ -14,26 +14,22 @@ const createDB = (config = {}) => {
   orm.models = models;
   orm.createSession = createSession({ models, initialState });
   orm.reducers = [];
-  orm.types = {};
   orm.actions = {};
 
   Object.entries(models).forEach(([key, model]) => {
-    const { reducer, types, actions } = createReducerAndActions(
-      key,
-      model,
-      __test__
-    );
+    const name = model.name || key;
 
-    initialState[key] = createEmptyState({ name: key });
+    const { reducer, actions } = createReducerAndActions(name, model, __test__);
+
+    initialState[name] = createEmptyState({ name: name });
     orm.reducers.push(reducer);
-    orm.types[key] = types;
-    orm.actions[key] = actions;
+    orm.actions[name] = actions;
   });
 
   orm.addReducer = reducer => orm.reducers.push(reducer);
 
   orm.reducer = (STATE = initialState, action) => {
-    const session = orm.createSession(STATE);
+    let session = orm.createSession(STATE);
 
     flatten(orm.reducers).forEach(reducer => {
       if (isFunction(reducer)) reducer(session, action);
@@ -42,7 +38,11 @@ const createDB = (config = {}) => {
       }
     });
 
-    return session.commit();
+    const newState = session.commit();
+
+    session = null;
+
+    return newState;
   };
 
   return orm;

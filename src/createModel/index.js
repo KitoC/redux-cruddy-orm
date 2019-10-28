@@ -1,10 +1,8 @@
 const { getReferences, getPrimaryKey } = require("../utils/createModel");
 
 const { PK } = require("../attributeTypes");
-const actions = require("./modelActions");
-const privateMethods = require("./privateMethods");
 const createReducerAndActions = require("../createReducerAndActions");
-
+const createRequestThunks = require("./createRequestThunks");
 const defaults = { attributes: { id: PK() } };
 
 const createModel = model => {
@@ -21,6 +19,9 @@ const createModel = model => {
   Model.attributes = { ...defaults.attributes, ...Model.attributes };
   Model.references = getReferences(model);
   Model.PK = getPrimaryKey(model);
+  Model.createRequestThunks = createRequestThunks;
+
+  Model.createRequestThunks({ endpoint: "/", axios: () => {} });
 
   return Model;
 };

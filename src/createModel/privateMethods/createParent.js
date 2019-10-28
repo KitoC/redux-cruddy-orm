@@ -1,12 +1,12 @@
 const { createPK } = require("../../utils/createModel");
 
-function createParent({ ref, data }) {
+const createParent = Model => ({ ref, data }) => {
   return {
     ref,
     data,
-    model: this.Model.name,
-    PK: createPK(data, this.Model.PK).value
+    model: Model.name,
+    PK: createPK(data, Model.PK).value
   };
-}
+};
 
 module.exports = createParent;

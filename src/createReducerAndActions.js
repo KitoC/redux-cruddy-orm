@@ -44,7 +44,6 @@ function createReducerAndActions(MODEL, model = {}, __test__ = {}) {
   };
 
   const reducer = {};
-
   reducer[setLoading] = (session, { payload }) => {
     if (__test__.reducer) __test__.reducer();
 
