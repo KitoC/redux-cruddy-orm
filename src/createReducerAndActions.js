@@ -1,33 +1,37 @@
 const createAction = require("./createAction");
 const get = require("lodash/get");
 
+const paths = {
+  prepare: type => `${type}.action.prepare`
+};
+
 function createReducerAndActions(MODEL, model = {}, __test__ = {}) {
   const { overrides = {} } = model;
   const type = t => `orm/default/${MODEL}/${t}`;
 
   const setLoading = createAction(
     type("setLoading"),
-    get(overrides, "setLoading.actionPrepare")
+    get(overrides, paths.prepare("setLoading"))
   );
   const setErrors = createAction(
     type("setErrors"),
-    get(overrides, "setErrors.actionPrepare")
+    get(overrides, paths.prepare("setErrors"))
   );
   const update = createAction(
     type("update"),
-    get(overrides, "update.actionPrepare")
+    get(overrides, paths.prepare("update"))
   );
   const insert = createAction(
     type("insert"),
-    get(overrides, "insert.actionPrepare")
+    get(overrides, paths.prepare("insert"))
   );
   const create = createAction(
     type("create"),
-    get(overrides, "create.actionPrepare")
+    get(overrides, paths.prepare("create"))
   );
   const destroy = createAction(
     type("destroy"),
-    get(overrides, "destroy.actionPrepare")
+    get(overrides, paths.prepare("destroy"))
   );
 
   const actions = {

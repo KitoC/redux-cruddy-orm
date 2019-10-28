@@ -3,11 +3,8 @@ const { relationTypes } = require("../../constants");
 const isArray = require("lodash/isArray");
 const mergeWith = require("lodash/mergeWith");
 const isPlainObject = require("lodash/isPlainObject");
-const { produce } = require("immer");
 
-// TODO: fix indexation so that foreign keys are removed if a record's related data has discrepencies...
-// i.e. it used to have more of a certain record but now it is one less
-const mergeFoundIn = (objValue = [], srcValue, key) => {
+const mergeFoundIn = (objValue = [], srcValue) => {
   if (isArray(srcValue)) {
     return srcValue;
   }

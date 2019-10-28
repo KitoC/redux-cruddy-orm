@@ -22,6 +22,8 @@ describe("model created from createSession", () => {
   const expected = {
     name: "parentModel",
     PK: ["id"],
+    reducer: parentModel.reducer,
+    actions: parentModel.actions,
     references: parentModel.references,
     __private__: parentModel.__private__,
     all: parentModel.all,
