@@ -1,4 +1,4 @@
-const { hasOne, hasMany, PK } = require("../../src/attributeTypes");
+const { hasOne, hasMany, primaryKey } = require("../../src/attributeTypes");
 const createDb = require("../../src/createOrm");
 
 describe("model created from createSession", () => {
@@ -31,8 +31,7 @@ describe("model created from createSession", () => {
     delete: parentModel.delete,
     upsert: parentModel.upsert,
     models: parentModel.models,
-    createRequestThunks: parentModel.createRequestThunks,
-    attributes: { id: PK() }
+    attributes: { id: primaryKey() }
   };
   const attr = { foo: "bar", bar: "foo" };
   const childAType = { __typename: "childA" };

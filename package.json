@@ -13,7 +13,10 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^24.9.0",
-    "jest-html-reporter": "^2.6.2"
+    "jest-html-reporter": "^2.6.2",
+    "redux": "^4.0.4",
+    "redux-mock-store": "^1.5.3",
+    "redux-thunk": "^2.3.0"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -35,6 +38,8 @@
     }
   },
   "dependencies": {
+    "axios": "^0.19.0",
+    "axios-mock-adapter": "^1.17.0",
     "immer": "^4.0.2"
   }
 }

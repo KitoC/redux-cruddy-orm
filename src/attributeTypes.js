@@ -1,8 +1,8 @@
 const { relationTypes, attributeTypes } = require("./constants");
 
-const PK = () => ({ type: attributeTypes.PK });
+const primaryKey = () => ({ type: attributeTypes.PK });
 
-const Attr = () => ({ type: attributeTypes.ATTR });
+const attribute = () => ({ type: attributeTypes.ATTR });
 
 const referenceShared = options => {
   const { model, as = model, FK = "id", cascade = false } = options;
@@ -20,4 +20,4 @@ const hasMany = ref => ({
   ...referenceShared(ref)
 });
 
-module.exports = { PK, Attr, hasOne, hasMany };
+module.exports = { primaryKey, attribute, hasOne, hasMany };

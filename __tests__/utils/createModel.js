@@ -5,7 +5,7 @@ const {
   getPrimaryKey
 } = require("../../src/utils/createModel");
 const { relationTypes, attributeTypes } = require("../../src/constants");
-const { hasOne, hasMany, PK } = require("../../src/attributeTypes");
+const { hasOne, hasMany, primaryKey } = require("../../src/attributeTypes");
 
 describe("createPK", () => {
   const record = { id: 1 };
@@ -32,7 +32,7 @@ describe("createFK", () => {
 });
 
 describe("getPrimaryKey", () => {
-  const modelConfig = { name: "model_name", attributes: { id: PK() } };
+  const modelConfig = { name: "model_name", attributes: { id: primaryKey() } };
 
   const expected = ["id"];
 
