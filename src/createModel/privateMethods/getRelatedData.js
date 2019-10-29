@@ -17,8 +17,9 @@ const getRelatedData = (Model, Models) => (record, options = {}) => {
     });
   }
 
-  references.forEach(ref => {
-    if (keys.includes(ref.as) && relationTypes[ref.relationType]) {
+  references
+    .filter(ref => keys.includes(ref.as) && relationTypes[ref.relationType])
+    .forEach(ref => {
       const RelatedModel = Models[ref.model];
 
       const getRelatedPK = ({ [RelatedModel.PK[0]]: pk }) => pk;
@@ -32,8 +33,7 @@ const getRelatedData = (Model, Models) => (record, options = {}) => {
       if (isPlainObject(data[ref.as])) {
         data[ref.as] = RelatedModel.byId(getRelatedPK(data[ref.as]), options);
       }
-    }
-  });
+    });
 
   return data;
 };
