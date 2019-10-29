@@ -1,9 +1,9 @@
 const { createPK } = require("../../utils/createModel");
 
-const shapeReference = Model => (record, RelatedModel) => {
+const shapeReference = Model => (record, relatedModel) => {
   return {
-    ...createPK(record, RelatedModel.PK).object,
-    __typename: RelatedModel.name
+    ...createPK(record, relatedModel.PK).object,
+    __typename: relatedModel.name
   };
 };
 

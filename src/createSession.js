@@ -16,22 +16,22 @@ const createSession = config => {
 
   session.resetToInitialState = () => (session.state = initialState);
 
-  Object.entries(models).forEach(([key, modelValue]) => {
-    const name = modelValue.name || key;
-    const Model = createModel({ name, ...modelValue });
+  Object.entries(models).forEach(([key, modelConfig]) => {
+    const name = modelConfig.name || key;
+    const model = createModel({ name, ...modelConfig });
 
     const { Models: exclude, ...rest } = session;
 
-    Model.upsert = actions.upsert(Model);
-    Model.all = actions.all(Model);
-    Model.byId = actions.byId(Model);
-    Model.delete = actions.Delete(Model);
-    Model.__private__ = {
-      ...createPrivateMethods(Model, Models),
+    model.upsert = actions.upsert(model);
+    model.all = actions.all(model);
+    model.byId = actions.byId(model);
+    model.delete = actions.Delete(model);
+    model.__private__ = {
+      ...createPrivateMethods(model, Models),
       session: rest
     };
 
-    Models[name] = Model;
+    Models[name] = model;
   });
 
   session.upsert = (type, data) => Models[type].upsert(data);

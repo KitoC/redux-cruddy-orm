@@ -21,7 +21,7 @@ const createDB = (config = {}) => {
 
     const { reducer, actions } = createReducerAndActions(name, model, __test__);
 
-    initialState[name] = createEmptyState({ name: name });
+    initialState[name] = createEmptyState({ name });
     orm.reducers.push(reducer);
     orm.actions[name] = actions;
   });

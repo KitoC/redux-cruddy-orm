@@ -2,7 +2,6 @@ const { createPK } = require("../../utils/createModel");
 const { relationTypes } = require("../../constants");
 const isArray = require("lodash/isArray");
 const mergeWith = require("lodash/mergeWith");
-const isPlainObject = require("lodash/isPlainObject");
 
 const mergeFoundIn = (objValue = [], srcValue) => {
   if (isArray(srcValue)) {
@@ -10,53 +9,51 @@ const mergeFoundIn = (objValue = [], srcValue) => {
   }
 };
 
-const normalizeRecord = (Model, Models) => record => {
+const normalizeRecord = (model, models) => record => {
   try {
     let data = { ...record };
 
-    const { value: PK } = createPK(record, Model.PK);
+    const { value: PK } = createPK(record, model.PK);
 
     const keys = Object.keys(data);
 
-    Model.references.forEach(ref => {
-      if (keys.includes(ref.as) && relationTypes[ref.relationType]) {
+    model.references
+      .filter(ref => keys.includes(ref.as) && relationTypes[ref.relationType])
+      .forEach(ref => {
         const relatedData = data[ref.as];
-        const RelatedModel = Models[ref.model];
+        const relatedModel = models[ref.model];
 
-        if (!RelatedModel) {
+        if (!relatedModel) {
           throw new Error(
-            `You are attempting to use a related model that thas not been defined yet - check "${ref.model}" on "${Model.name}"`
+            `You are attempting to use a related model that thas not been defined yet - check "${ref.model}" on "${model.name}"`
           );
         }
 
-        RelatedModel.upsert(
+        relatedModel.upsert(
           relatedData,
-          Model.__private__.createParent({ ref, data })
+          model.__private__.createParent({ ref, data })
         );
 
         if (isArray(data[ref.as])) {
           data[ref.as] = data[ref.as].map(relatedRecord =>
-            Model.__private__.shapeReference(relatedRecord, RelatedModel)
+            model.__private__.shapeReference(relatedRecord, relatedModel)
           );
-        }
-
-        if (isPlainObject(data[ref.as])) {
-          data[ref.as] = Model.__private__.shapeReference(
+        } else {
+          data[ref.as] = model.__private__.shapeReference(
             data[ref.as],
-            RelatedModel
+            relatedModel
           );
         }
+      });
+
+    model.__private__.session.setState(draftState => {
+      if (!draftState[model.name].ids.includes(PK)) {
+        draftState[model.name].ids.push(PK);
       }
-    });
 
-    Model.__private__.session.setState(draftState => {
-      if (!draftState[Model.name].ids.includes(PK)) {
-        draftState[Model.name].ids.push(PK);
-      }
+      const existingData = draftState[model.name].byId[PK] || {};
 
-      const existingData = draftState[Model.name].byId[PK] || {};
-
-      draftState[Model.name].byId[PK] = mergeWith(
+      draftState[model.name].byId[PK] = mergeWith(
         existingData,
         data,
         mergeFoundIn
